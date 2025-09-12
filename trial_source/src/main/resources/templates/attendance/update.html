@@ -47,20 +47,33 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
+								
+								<!-- Task.29
+								「出勤と退勤時間をスクロール表示する」 -->
 								<td class="w70">
-									<input type="text" th:name="|attendanceList[${stat.index}].trainingStartTime|"
-									th:value="${dailyAttendanceForm.trainingStartTime}" class="form-control" />
-								</td>
+									<!-- 出勤 -->
+									<select th:name="|attendanceList[${stat.index}].trainingStartTime|" class="form-control">
+										<option th:each="trainingStartTime : ${attendanceForm.attendanceList}" th:value="${attendanceListe.key}" th:inline="text" class="form-control"
+											th:selected="${attendanceList.key == dailyAttendanceForm.trainingStartTime}"></option>
+										</select>
+									</td>
+								
 								<td class="w70">
-									<input type="text" th:name="|attendanceList[${stat.index}].trainingEndTime|"
-									th:value="${dailyAttendanceForm.trainingEndTime}" class="form-control" />
-								</td>
+									<!-- 退勤 -->
+									<select th:name="|attendanceList[${stat.index}].trainingEndTime|" class="form-control">
+										<option th:each="trainingEndTime : ${attendanceForm.attendanceList}" th:value="${attendanceList.key}" th:inline="text" class="form-control"
+											th:selected="${attendanceList.key == dailyAttendanceForm.trainingEndTime}"></option>
+									</select>
+									</td>
+								
 								<td class="w80">
+									<!-- 中抜け時間 -->
 									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control">
-										<option th:each="blankTime : ${attendanceForm.blankTimes}" th:value="${blankTime.key}" th:inlne="text" class="form-control" 
+										<option th:each="blankTime : ${attendanceForm.blankTimes}" th:value="${blankTime.key}" th:inline="text" class="form-control" 
 											th:selected="${blankTime.key == dailyAttendanceForm.blankTime}">[[${blankTime.value}]]</option>
 									</select>
 								</td>
+								<!-- ステータスと備考 -->
 								<td class="w70">[[${dailyAttendanceForm.statusDispName}]]</td>
 								<td class="w240">
 									<input type="text" th:name="|attendanceList[${stat.index}].note|" th:value="${dailyAttendanceForm.note}" class="form-control"></input>

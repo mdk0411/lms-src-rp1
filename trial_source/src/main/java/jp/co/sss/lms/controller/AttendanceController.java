@@ -143,5 +143,4 @@ public class AttendanceController {
 
 		return "attendance/detail";
 	}
-
 }
