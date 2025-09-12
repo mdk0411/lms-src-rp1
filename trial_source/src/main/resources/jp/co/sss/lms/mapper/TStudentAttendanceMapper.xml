@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.co.sss.lms.mapper.TStudentAttendanceMapper">
-
 	<select id="findByLmsUserId" resultType="jp.co.sss.lms.entity.TStudentAttendance">
 		SELECT * 
 		FROM t_student_attendance
@@ -85,5 +84,17 @@
 			blank_time = #{blankTime}
 		WHERE student_attendance_id = #{studentAttendanceId}
 	</update>
+	
+<select id="countPast" resultType="int">
+  SELECT COUNT(*)
+  FROM t_student_attendance
+  WHERE lms_user_id = #{lmsUserId}
+    AND delete_flg = #{deleteFlg}
+    AND training_date &lt; #{today}
+    AND (training_start_time IS NULL OR training_start_time = '')
+    AND (training_end_time IS NULL OR training_end_time = '')
+</select>
+
+	
 
 </mapper>

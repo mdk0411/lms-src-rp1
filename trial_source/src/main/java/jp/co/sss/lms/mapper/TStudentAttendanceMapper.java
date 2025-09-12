@@ -10,12 +10,21 @@ import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.entity.TStudentAttendance;
 
 /**
- * 勤怠情報（受講生入力）テーブルマッパー
+ * 勤怠情報（受講生
+ * 
+ * 入力）テーブルマッパー
  * 
  * @author 東京ITスクール
  */
 @Mapper
 public interface TStudentAttendanceMapper {
+
+	// 未入力件数をカウントする
+	int countPast(
+	    @Param("lmsUserId") Integer lmsUserId,
+	    @Param("deleteFlg") Short deleteFlg,
+	    @Param("today") Date today
+	);
 
 	/**
 	 * 勤怠情報（受講生入力）取得（LMSユーザーID）
@@ -64,5 +73,4 @@ public interface TStudentAttendanceMapper {
 	 * @return 更新結果
 	 */
 	Boolean update(TStudentAttendance tStudentAttendance);
-
 }

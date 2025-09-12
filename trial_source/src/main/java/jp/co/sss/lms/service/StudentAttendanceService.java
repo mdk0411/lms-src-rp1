@@ -51,6 +51,22 @@ public class StudentAttendanceService {
 	 * @param lmsUserId
 	 * @return 勤怠管理画面用DTOリスト
 	 */
+//Task25.
+	// 未入力件数カウント
+	public int countPast(Integer lmsUserId, Date today) {
+	    return tStudentAttendanceMapper.countPast(
+	        lmsUserId, Constants.DB_FLG_FALSE, today);
+	}
+
+	// メッセージ取得
+	public String getPastUnfilledMessage() {
+	    return messageUtil.getMessage(
+	        Constants.VALID_KEY_REQUIREDTRAININGTIMEBULK,
+	        new String[] { "過去日" }
+	    );
+	}
+
+
 	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId,
 			Integer lmsUserId) {
 
@@ -118,8 +134,15 @@ public class StudentAttendanceService {
 				// 退勤時刻は出勤時刻より後でなければいけません。
 				return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE);
 			}
+			int count = countPast(loginUserDto.getLmsUserId(),
+                    attendanceUtil.getTrainingDate());
+			if (count > 0) {
+				return messageUtil.getMessage(Constants.VALID_KEY_REQUIREDTRAININGTIMEBULK);
+}
+
 			break;
 		}
+		
 		return null;
 	}
 

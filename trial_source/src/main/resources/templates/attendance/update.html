@@ -47,26 +47,62 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
+<!-- Task.28 「定時ボタン」の設置>
+class="btn btn-success default-button"
 								
-								<!-- Task.29
-								「出勤と退勤時間をスクロール表示する」 -->
-								<td class="w70">
-									<!-- 出勤 -->
-									<select th:name="|attendanceList[${stat.index}].trainingStartTime|" class="form-control">
-										<option th:each="trainingStartTime : ${attendanceForm.attendanceList}" th:value="${attendanceListe.key}" th:inline="text" class="form-control"
-											th:selected="${attendanceList.key == dailyAttendanceForm.trainingStartTime}"></option>
-										</select>
-									</td>
 								
-								<td class="w70">
-									<!-- 退勤 -->
-									<select th:name="|attendanceList[${stat.index}].trainingEndTime|" class="form-control">
-										<option th:each="trainingEndTime : ${attendanceForm.attendanceList}" th:value="${attendanceList.key}" th:inline="text" class="form-control"
-											th:selected="${attendanceList.key == dailyAttendanceForm.trainingEndTime}"></option>
-									</select>
-									</td>
 								
-								<td class="w80">
+								
+								
+<!-- Task.29　「出勤と退勤時間をスクロール表示する」 -->
+ <td class="w140">
+  <div style="white-space:nowrap;">
+    <select th:name="|attendanceList[${stat.index}].startHour|"
+            class="form-control"
+            style="display:inline-block;width:72px;margin-right:6px;">
+      <option value=""></option>
+      <option th:each="h : ${attendanceForm.hourList}"
+              th:value="${h.key}" th:text="${h.value}"
+              th:selected="${h.key == dailyAttendanceForm.startHour}"></option>
+    </select>
+
+    <span style="display:inline-block;margin:0 6px;">:</span>
+
+    <select th:name="|attendanceList[${stat.index}].startMinute|"
+            class="form-control"
+            style="display:inline-block;width:72px;">
+      <option value=""></option>
+      <option th:each="m : ${attendanceForm.minuteList}"
+              th:value="${m.key}" th:text="${m.value}"
+              th:selected="${m.key == dailyAttendanceForm.startMinute}"></option>
+    </select>
+  </div>
+</td>
+  <td class="w140">
+  <div style="white-space:nowrap;">
+    <select th:name="|attendanceList[${stat.index}].endHour|"
+            class="form-control"
+            style="display:inline-block;width:72px;margin-right:6px;">
+      <option value=""></option>
+      <option th:each="h : ${attendanceForm.hourList}"
+              th:value="${h.key}" th:text="${h.value}"
+              th:selected="${h.key == dailyAttendanceForm.endHour}"></option>
+    </select>
+
+    <span style="display:inline-block;margin:0 6px;">:</span>
+
+    <select th:name="|attendanceList[${stat.index}].endMinute|"
+            class="form-control"
+            style="display:inline-block;width:72px;">
+      <option value=""></option>
+      <option th:each="m : ${attendanceForm.minuteList}"
+              th:value="${m.key}" th:text="${m.value}"
+              th:selected="${m.key == dailyAttendanceForm.endMinute}"></option>
+    </select>
+  </div>
+</td>
+<!-- Task.29 終わり-->
+									<td class="w80">
 									<!-- 中抜け時間 -->
 									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control">
 										<option th:each="blankTime : ${attendanceForm.blankTimes}" th:value="${blankTime.key}" th:inline="text" class="form-control" 

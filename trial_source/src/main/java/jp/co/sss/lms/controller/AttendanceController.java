@@ -1,6 +1,8 @@
 package jp.co.sss.lms.controller;
 
 import java.text.ParseException;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +49,17 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
-		return "attendance/detail";
-	}
+// Task.25: 過去日未入力チェック
+		 Date today = new Date();
+		    int count = studentAttendanceService.countPast(loginUserDto.getLmsUserId(), today);
+
+		    if (count > 0) {
+		        model.addAttribute("error",
+		            studentAttendanceService.getPastUnfilledMessage());
+		    }
+
+		    return "attendance/detail";
+		}		    
 
 	/**
 	 * 勤怠管理画面 『出勤』ボタン押下
@@ -115,6 +126,11 @@ public class AttendanceController {
 		// 勤怠フォームの生成
 		AttendanceForm attendanceForm = studentAttendanceService
 				.setAttendanceForm(attendanceManagementDtoList);
+		
+//Task.29
+		attendanceForm.setHourList(buildHourList());
+		attendanceForm.setMinuteList(buildMinuteList(1));
+
 		model.addAttribute("attendanceForm", attendanceForm);
 
 		return "attendance/update";
@@ -143,4 +159,25 @@ public class AttendanceController {
 
 		return "attendance/detail";
 	}
+	
+//Task.29
+			//時リスト
+			public LinkedHashMap<String, String> buildHourList() {
+			    LinkedHashMap<String, String> map = new LinkedHashMap<>();
+			    for (int h = 0; h < 24; h++) {
+			        String t = String.format("%02d", h);
+			        map.put(t, t);
+			    }
+			    return map;
+			}
+			// 分リスト 00〜59
+			public LinkedHashMap<String, String> buildMinuteList(int step) {
+			    LinkedHashMap<String, String> map = new LinkedHashMap<>();
+			    for (int m = 0; m < 60; m += step) {
+			        String t = String.format("%02d", m);
+			        map.put(t, t);
+			    }
+			    return map;
+			}
+			
 }
