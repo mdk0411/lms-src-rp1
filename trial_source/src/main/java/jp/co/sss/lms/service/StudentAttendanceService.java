@@ -60,10 +60,7 @@ public class StudentAttendanceService {
 
 	// メッセージ取得
 	public String getPastUnfilledMessage() {
-	    return messageUtil.getMessage(
-	        Constants.VALID_KEY_REQUIREDTRAININGTIMEBULK,
-	        new String[] { "過去日" }
-	    );
+	    return messageUtil.getMessage("attendance.pastUnfilled.notice");
 	}
 
 

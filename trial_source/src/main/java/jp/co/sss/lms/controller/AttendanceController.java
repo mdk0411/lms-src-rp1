@@ -2,7 +2,6 @@ package jp.co.sss.lms.controller;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
+import jp.co.sss.lms.util.AttendanceUtil;
 import jp.co.sss.lms.util.Constants;
 
 /**
@@ -31,6 +31,9 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
+//Task.29
+	@Autowired
+	private AttendanceUtil attendanceUtil;
 
 	/**
 	 * 勤怠管理画面 初期表示
@@ -54,7 +57,7 @@ public class AttendanceController {
 		    int count = studentAttendanceService.countPast(loginUserDto.getLmsUserId(), today);
 
 		    if (count > 0) {
-		        model.addAttribute("error",
+		        model.addAttribute("message",
 		            studentAttendanceService.getPastUnfilledMessage());
 		    }
 
@@ -128,8 +131,8 @@ public class AttendanceController {
 				.setAttendanceForm(attendanceManagementDtoList);
 		
 //Task.29
-		attendanceForm.setHourList(buildHourList());
-		attendanceForm.setMinuteList(buildMinuteList(1));
+		attendanceForm.setHourList(attendanceUtil.buildHourList());
+		attendanceForm.setMinuteList(attendanceUtil.buildMinuteList(1));
 
 		model.addAttribute("attendanceForm", attendanceForm);
 
@@ -158,26 +161,5 @@ public class AttendanceController {
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
 		return "attendance/detail";
-	}
-	
-//Task.29
-			//時リスト
-			public LinkedHashMap<String, String> buildHourList() {
-			    LinkedHashMap<String, String> map = new LinkedHashMap<>();
-			    for (int h = 0; h < 24; h++) {
-			        String t = String.format("%02d", h);
-			        map.put(t, t);
-			    }
-			    return map;
-			}
-			// 分リスト 00〜59
-			public LinkedHashMap<String, String> buildMinuteList(int step) {
-			    LinkedHashMap<String, String> map = new LinkedHashMap<>();
-			    for (int m = 0; m < 60; m += step) {
-			        String t = String.format("%02d", m);
-			        map.put(t, t);
-			    }
-			    return map;
-			}
-			
+	}			
 }
