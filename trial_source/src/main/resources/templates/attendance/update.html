@@ -17,10 +17,11 @@
 			<h2><small>途中退校日：${dispLeaveDate}</small></h2>
 		</th:block>
 	</th:block>
-
+<!-- Task29   一覧スクロール表示-->
+	<div class="scrollable-list" style="height: 500px; overflow: auto;">
+		<ul>
 	<div class="row">
 		<div class="bs-component col-sm-12">
-
 			<form th:action="@{/attendance/update}" method="post">
 				<table class="table table-hover dataTable no-footer">
 					<thead>
@@ -47,14 +48,14 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
-<!-- Task.28 「定時ボタン」の設置>
-class="btn btn-success default-button"
+<!-- Task.28 「定時ボタン」の設置 
+class="btn btn-success default-button"-->
 								
 								
 								
 								
 								
-<!-- Task.29　「出勤と退勤時間をスクロール表示する」 -->
+<!-- Task.26 出勤と退勤時間のセレクトボックス」 -->
  <td class="w140">
   <div style="white-space:nowrap;">
     <select th:name="|attendanceList[${stat.index}].startHour|"
@@ -101,7 +102,7 @@ class="btn btn-success default-button"
     </select>
   </div>
 </td>
-<!-- Task.29 終わり-->
+<!-- Task.26 終わり-->
 									<td class="w80">
 									<!-- 中抜け時間 -->
 									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control">
@@ -118,7 +119,8 @@ class="btn btn-success default-button"
 						</th:block>
 					</tbody>
 				</table>
-
+</ul>
+</div>
 				<div class="form-group">
 					<th:block th:if="${session.loginUserDto.role == '0001'}">
 						<a th:href="@{/attendance/detail}" class="btn btn-default">戻る</a>

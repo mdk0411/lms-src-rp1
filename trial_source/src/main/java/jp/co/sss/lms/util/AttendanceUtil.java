@@ -101,7 +101,7 @@ public class AttendanceUtil {
 		}
 		return trainingDate;
 	}
-// Task.29
+// Task.26
 				//時リスト
 				public LinkedHashMap<String, String> buildHourList() {
 				    LinkedHashMap<String, String> map = new LinkedHashMap<>();

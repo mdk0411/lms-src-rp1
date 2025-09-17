@@ -31,7 +31,7 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
-//Task.29
+//Task.26
 	@Autowired
 	private AttendanceUtil attendanceUtil;
 
@@ -130,7 +130,7 @@ public class AttendanceController {
 		AttendanceForm attendanceForm = studentAttendanceService
 				.setAttendanceForm(attendanceManagementDtoList);
 		
-//Task.29
+//Task.26
 		attendanceForm.setHourList(attendanceUtil.buildHourList());
 		attendanceForm.setMinuteList(attendanceUtil.buildMinuteList(1));
 
@@ -151,10 +151,18 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
+		 //  Task.27 入力チェックを呼び出す
+	    List<String> errors = studentAttendanceService.validateAttendanceForm(attendanceForm);
+	    if (!errors.isEmpty()) {
+	        model.addAttribute("errorList", errors);
+	        model.addAttribute("attendanceForm", attendanceForm);  // 入力値を保持して戻す
+	        return "attendance/update"; // エラーがあれば編集画面に戻る
+	    }
 
 		// 更新
 		String message = studentAttendanceService.update(attendanceForm);
 		model.addAttribute("message", message);
+		
 		// 一覧の再取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());

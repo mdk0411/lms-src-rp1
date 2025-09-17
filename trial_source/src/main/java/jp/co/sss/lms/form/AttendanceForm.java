@@ -32,6 +32,7 @@ public class AttendanceForm {
 	/** 日次の勤怠フォームリスト */
 	private List<DailyAttendanceForm> attendanceList;
 
+/* Task.26 */
 	/** 出勤・退勤（時のプルダウン） */
 	private LinkedHashMap<String, String> hourList;
 	/** 出勤・退勤（分のプルダウン） */

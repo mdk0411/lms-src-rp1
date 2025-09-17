@@ -353,5 +353,76 @@ public class StudentAttendanceService {
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
+	
+// Task.27 入力チェック
+	public List<String> validateAttendanceForm(AttendanceForm attendanceForm) {
+	    List<String> errors = new ArrayList<>();
 
+	    int index = 0;
+	    for (DailyAttendanceForm daily : attendanceForm.getAttendanceList()) {
+	        index++;
+
+	        // a. 備考の文字数チェック
+	        if (daily.getNote() != null && daily.getNote().length() > 100) {
+	            errors.add(messageUtil.getMessage(
+	                Constants.VALID_KEY_MAXLENGTH,
+	                new String[]{"備考", "100"}));
+	        }
+
+	        // b. 出勤時分の片方だけ入力
+	        if ((isNotEmpty(daily.getTrainingStartHour()) && isEmpty(daily.getTrainingStartMinute())) ||
+	            (isEmpty(daily.getTrainingStartHour()) && isNotEmpty(daily.getTrainingStartMinute()))) {
+	            errors.add(messageUtil.getMessage(
+	                Constants.INPUT_INVALID,
+	                new String[]{"出勤時間"}));
+	        }
+
+	        // c. 退勤時分の片方だけ入力
+	        if ((isNotEmpty(daily.getTrainingEndHour()) && isEmpty(daily.getTrainingEndMinute())) ||
+	            (isEmpty(daily.getTrainingEndHour()) && isNotEmpty(daily.getTrainingEndMinute()))) {
+	            errors.add(messageUtil.getMessage(
+	                Constants.INPUT_INVALID,
+	                new String[]{"退勤時間"}));
+	        }
+
+	        /* d. 出勤なし && 退勤あり
+	        if (isEmpty(daily.getTrainingStartTime()) && isNotEmpty(daily.getTrainingEndTime())) {
+	            errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY));
+	        }
+
+	        // e. 出勤 > 退勤
+	        if (isNotEmpty(daily.getTrainingStartTime()) && isNotEmpty(daily.getTrainingEndTime())) {
+	            TrainingTime start = new TrainingTime(daily.getTrainingStartTime());
+	            TrainingTime end = new TrainingTime(daily.getTrainingEndTime());
+	            if (start.compareTo(end) > 0) {
+	                errors.add(messageUtil.getMessage(
+	                    Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE,
+	                    new Object[]{index}));
+	            }
+	        }
+
+	        // f. 中抜け時間 > 勤務時間
+	        if (isNotEmpty(daily.getBlankTime()) &&
+	            isNotEmpty(daily.getTrainingStartTime()) &&
+	            isNotEmpty(daily.getTrainingEndTime())) {
+	            TrainingTime start = new TrainingTime(daily.getTrainingStartTime());
+	            TrainingTime end = new TrainingTime(daily.getTrainingEndTime());
+	            TrainingTime blank = new TrainingTime(daily.getBlankTime());
+
+	            if (blank.compareTo(end.subtract(start)) > 0) {
+	                errors.add(messageUtil.getMessage(
+	                    Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR));
+	            }*/
+	        }
+
+	    return errors;
+	}
+
+	// ヘルパー
+	private boolean isEmpty(String val) {
+	    return val == null || val.isEmpty();
+	}
+	private boolean isNotEmpty(String val) {
+	    return !isEmpty(val);
+	}
 }
