@@ -25,6 +25,8 @@ public interface TStudentAttendanceMapper {
 	    @Param("deleteFlg") Short deleteFlg,
 	    @Param("today") Date today
 	);
+	
+
 
 	/**
 	 * 勤怠情報（受講生入力）取得（LMSユーザーID）

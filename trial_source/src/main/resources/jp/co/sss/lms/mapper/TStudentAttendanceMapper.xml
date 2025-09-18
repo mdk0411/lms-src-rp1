@@ -94,7 +94,4 @@
     AND (training_start_time IS NULL OR training_start_time = '')
     AND (training_end_time IS NULL OR training_end_time = '')
 </select>
-
-	
-
 </mapper>

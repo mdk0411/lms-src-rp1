@@ -46,6 +46,8 @@ public class DailyAttendanceForm {
 	private String courseName;
 	/** インデックス */
 	private String index;
+	
+	
 //Task26追加分
 	private String startHour;
 	private String startMinute;
@@ -54,24 +56,23 @@ public class DailyAttendanceForm {
 	
 //Task27追加分
 	public String getTrainingStartHour() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	    return startHour;
 	}
 
 	public String getTrainingStartMinute() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	    return startMinute;
 	}
 
 	public String getTrainingEndHour() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	    return endHour;
 	}
 
 	public String getTrainingEndMinute() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	    return endMinute;
 	}
+	/*public String getBlankTime() {
+		return null;
+	}*/
 
 
 }

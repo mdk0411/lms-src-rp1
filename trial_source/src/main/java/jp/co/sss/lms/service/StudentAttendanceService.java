@@ -51,19 +51,17 @@ public class StudentAttendanceService {
 	 * @param lmsUserId
 	 * @return 勤怠管理画面用DTOリスト
 	 */
-//Task25.
+//Task.25
 	// 未入力件数カウント
 	public int countPast(Integer lmsUserId, Date today) {
 	    return tStudentAttendanceMapper.countPast(
 	        lmsUserId, Constants.DB_FLG_FALSE, today);
 	}
 
-	// メッセージ取得
+	// 「過去日の～」メッセージ取得
 	public String getPastUnfilledMessage() {
 	    return messageUtil.getMessage("attendance.pastUnfilled.notice");
 	}
-
-
 	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId,
 			Integer lmsUserId) {
 
@@ -385,7 +383,7 @@ public class StudentAttendanceService {
 	                new String[]{"退勤時間"}));
 	        }
 
-	        /* d. 出勤なし && 退勤あり
+	        // d. 出勤なし && 退勤あり
 	        if (isEmpty(daily.getTrainingStartTime()) && isNotEmpty(daily.getTrainingEndTime())) {
 	            errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY));
 	        }
@@ -397,27 +395,26 @@ public class StudentAttendanceService {
 	            if (start.compareTo(end) > 0) {
 	                errors.add(messageUtil.getMessage(
 	                    Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE,
-	                    new Object[]{index}));
+	                    new String[]{String.valueOf(index)}));
 	            }
 	        }
 
 	        // f. 中抜け時間 > 勤務時間
-	        if (isNotEmpty(daily.getBlankTime()) &&
-	            isNotEmpty(daily.getTrainingStartTime()) &&
-	            isNotEmpty(daily.getTrainingEndTime())) {
-	            TrainingTime start = new TrainingTime(daily.getTrainingStartTime());
-	            TrainingTime end = new TrainingTime(daily.getTrainingEndTime());
-	            TrainingTime blank = new TrainingTime(daily.getBlankTime());
+	        if (daily.getBlankTime() != null &&
+	        	    isNotEmpty(daily.getTrainingStartTime()) &&
+	        	    isNotEmpty(daily.getTrainingEndTime())) {
+	        	    TrainingTime start = new TrainingTime(daily.getTrainingStartTime());
+	        	    TrainingTime end = new TrainingTime(daily.getTrainingEndTime());
+	        	    TrainingTime blank = attendanceUtil.calcBlankTime(daily.getBlankTime());
 
-	            if (blank.compareTo(end.subtract(start)) > 0) {
-	                errors.add(messageUtil.getMessage(
-	                    Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR));
-	            }*/
+	        	    if (blank.compareTo(end.subtract(start)) > 0) {
+	        	        errors.add(messageUtil.getMessage(
+	        	            Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR));
+	            }
 	        }
-
+	    }
 	    return errors;
 	}
-
 	// ヘルパー
 	private boolean isEmpty(String val) {
 	    return val == null || val.isEmpty();

@@ -151,7 +151,7 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
-		 //  Task.27 入力チェックを呼び出す
+//  Task.27 入力チェックを呼び出す
 	    List<String> errors = studentAttendanceService.validateAttendanceForm(attendanceForm);
 	    if (!errors.isEmpty()) {
 	        model.addAttribute("errorList", errors);
@@ -169,5 +169,5 @@ public class AttendanceController {
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
 		return "attendance/detail";
-	}			
+}
 }
