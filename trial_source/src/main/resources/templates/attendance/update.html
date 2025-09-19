@@ -17,34 +17,30 @@
 			<h2><small>途中退校日：${dispLeaveDate}</small></h2>
 		</th:block>
 	</th:block>
+	
 	<div class="row">
 		<div class="bs-component col-sm-12">
 			<form th:action="@{/attendance/update}" method="post">
-<!-- Task27 エラーがあったら、画面上部に表示する-->
-<div th:if="${errorList != null}">
-  <ul class="text-danger">
-    <li th:each="err : ${errorList}" th:text="${err}"></li>
-  </ul>
-</div>
-<!-- Task29   一覧スクロール表示-->
-<table class="table table-hover dataTable no-footer" style="table-layout: fixed;">
-					<thead style="display:block;">
+				
+<!-- 河島麻登花 - Task.29 --><!-- 一覧をスクロール表示できるように加筆 -->
+				<table class="table table-hover dataTable no-footer">
+					<thead class="db">
 						<tr>
 							<th class="w140">日付</th>
-							<th class="w300">コース内容</th>
-							<!-- 定時ボタン -->
+							<th class="w140">コース内容</th>
+						<!-- 河島麻登花 - Task.28定時ボタン -->
 							<th class="w60"></th>
-							<!-- Task29 mockの値参考 -->
+						<!-- 河島麻登花 - Task.29 --><!-- 画面mockから値を参照、修正 -->
       						<th class="w180" colspan="3">出勤</th>
-      						<!-- Task29 mockの値参考 -->
+      					<!-- 河島麻登花 - Task.29 --><!-- 画面mockから値を参照、修正 -->
       						<th class="w180" colspan="3">退勤</th>
 							<th class="w80">中抜け時間</th>
 							<th class="w70">ステータス</th>
-							<th class="w240">備考</th>
+							<th class="w140">備考</th>
 						</tr>
 					</thead>
-<!-- Task29   一覧スクロール表示-->
-<tbody style="display:block; overflow-y: scroll; height:560px;">
+<!-- 河島麻登花 - Task.29 --><!-- 一覧をスクロール表示できるように加筆 -->
+				<tbody class="db h560" style="overflow-y: scroll;">
 						<th:block th:each="dailyAttendanceForm, stat : *{attendanceForm.attendanceList}">
 							<tr>
 								<th:block>
@@ -58,8 +54,8 @@
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
 								
-<!-- Task.28 「定時ボタン」の設置 
-class="btn btn-success default-button"-->
+<!-- Task.28 「定時ボタン」の設置 -->
+<!-- class="btn btn-success default-button" -->
 <td class="w60">
         <input type="button"
                value="定時"
@@ -151,3 +147,9 @@ class="btn btn-success default-button"-->
 
 </body>
 </html>
+<!-- 河島麻登花 - Task.27 --><!-- エラーがあったら、画面上部に表示する-->
+<!-- <div th:if="${errorList != null}">
+  <ul class="text-danger"th:errorclass="errorInput">
+    <li th:each="err : ${errorList}" th:text="${err}"></li>
+  </ul>
+</div>-->

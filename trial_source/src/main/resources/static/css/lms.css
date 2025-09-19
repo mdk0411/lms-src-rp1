@@ -1,4 +1,5 @@
 @charset "utf-8";
+/* 河島麻登花 - Task.29 - 1567行,1588行に高さ追加*/
 
 table form, .ib {
 	display: inline-block;
@@ -1564,6 +1565,10 @@ html, body {
 .h350 {
 	height: 350px;
 }
+/* 河島麻登花 - Task.29 */
+.h360 {
+	height:360px;
+}
 
 .h400 {
 	height: 400px;
@@ -1580,7 +1585,10 @@ html, body {
 .h550 {
 	height: 550px;
 }
-
+/* 河島麻登花 - Task.29 */
+.h560 {
+	height: 560px;
+}
 .h600 {
 	height: 600px;
 }

@@ -55,8 +55,9 @@
 						<th class="w200">備考</th>
 					</tr>
 				</thead>
-
-				<tbody class="db">
+				
+<!-- 河島麻登花 - Task.29 --><!-- 一覧をスクロール表示できるように加筆 -->
+				<tbody class="db h360" style="overflow-y: scroll;">
 					<th:block th:each="attendanceManagementDto : ${attendanceManagementDtoList}" th:object="${attendanceManagementDto}">
 						<tr>
 							<td class="w160">[[*{#dates.format(trainingDate, 'yyyy年M月d日(E)')}]]</td>
