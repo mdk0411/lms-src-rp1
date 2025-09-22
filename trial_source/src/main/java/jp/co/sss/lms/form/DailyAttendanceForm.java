@@ -16,10 +16,27 @@ public class DailyAttendanceForm {
 	private String leaveDate;
 	/** 日付 */
 	private String trainingDate;
+	
 	/** 出勤時間 */
 	private String trainingStartTime;
+	/**
+	 * 出勤時間(時)と(分)
+	 * 
+	 * @author 河島麻登花 - Task.26
+	 */
+		private String trainingStartTimeHour;
+		private String trainingStartTimeMinute;
+	
 	/** 退勤時間 */
 	private String trainingEndTime;
+	/**
+	 * 退勤時間(時)と(分)
+	 * 
+	 * @author 河島麻登花 - Task.26
+	 */
+		private String trainingEndTimeHour;
+		private String trainingEndTimeMinute;
+
 	/** 中抜け時間 */
 	private Integer blankTime;
 	/** 中抜け時間（画面表示用） */
@@ -46,15 +63,8 @@ public class DailyAttendanceForm {
 	private String courseName;
 	/** インデックス */
 	private String index;
-	
-	
-//Task26追加分
-	private String startHour;
-	private String startMinute;
-	private String endHour;
-	private String endMinute;
-	
-//Task27追加分
+
+/*Task27追加分
 	public String getTrainingStartHour() {
 	    return startHour;
 	}
@@ -70,7 +80,7 @@ public class DailyAttendanceForm {
 	public String getTrainingEndMinute() {
 	    return endMinute;
 	}
-	/*public String getBlankTime() {
+	public String getBlankTime() {
 		return null;
 	}*/
 

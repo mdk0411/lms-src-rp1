@@ -53,58 +53,60 @@
 								</th:block>
 								<td class="w140">[[${dailyAttendanceForm.dispTrainingDate}]]</td>
 								<td class="w300">[[${dailyAttendanceForm.sectionName}]]</td>
-								
-<!-- Task.28 「定時ボタン」の設置 -->
-<!-- class="btn btn-success default-button" -->
+
+
+<!-- 河島麻登花 - Task.28 「定時ボタン」の設置 -->
 <td class="w60">
-        <input type="button"
-               value="定時"
-               class="btn btn-success default-button" />
-      </td>
-								
-								
-								
-								
-								
-<!-- Task.26 出勤と退勤時間のセレクトボックス」 -->
+        <input type="button" value="定時" class="btn btn-success default-button" />
+</td>
+
+
+<!-- 河島麻登花 - Task.26 出勤(時:分) -->
 <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].startHour|" class="form-control w70">
+          <select th:name="|attendanceList[${stat.index}].startHour|"
+           class="form-control w70">
             <option value=""></option>
             <option th:each="h : ${attendanceForm.hourList}"
-                    th:value="${h.key}" th:text="${h.value}"
+                    th:value="${h.key}"
+                    th:text="${h.value}"
                     th:selected="${h.key == dailyAttendanceForm.startHour}"></option>
           </select>
         </td>
         <td>:</td>
 <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].startMinute|" class="form-control w70">
+          <select th:name="|attendanceList[${stat.index}].startMinute|"
+          class="form-control w70">
             <option value=""></option>
             <option th:each="m : ${attendanceForm.minuteList}"
-                    th:value="${m.key}" th:text="${m.value}"
+                    th:value="${m.key}"
+                    th:text="${m.value}"
                     th:selected="${m.key == dailyAttendanceForm.startMinute}"></option>
           </select>
         </td>
 
- <!-- 退勤(時:分) -->
+ <!-- 河島麻登花 - Task.26 退勤(時:分) -->
  <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].endHour|" class="form-control w70">
+          <select th:name="|attendanceList[${stat.index}].endHour|"
+          class="form-control w70">
             <option value=""></option>
             <option th:each="h : ${attendanceForm.hourList}"
-                    th:value="${h.key}" th:text="${h.value}"
+                    th:value="${h.key}"
+                    th:text="${h.value}"
                     th:selected="${h.key == dailyAttendanceForm.endHour}"></option>
           </select>
         </td>
         <td>:</td>
 <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].endMinute|" class="form-control w70">
+          <select th:name="|attendanceList[${stat.index}].endMinute|"
+          class="form-control w70">
             <option value=""></option>
             <option th:each="m : ${attendanceForm.minuteList}"
-                    th:value="${m.key}" th:text="${m.value}"
+                    th:value="${m.key}"
+                    th:text="${m.value}"
                     th:selected="${m.key == dailyAttendanceForm.endMinute}"></option>
           </select>
         </td>
 
-<!-- Task.26 終わり-->
 									<td class="w80">
 									<!-- 中抜け時間 -->
 									<select th:name="|attendanceList[${stat.index}].blankTime|" class="form-control w100">
@@ -147,9 +149,3 @@
 
 </body>
 </html>
-<!-- 河島麻登花 - Task.27 --><!-- エラーがあったら、画面上部に表示する-->
-<!-- <div th:if="${errorList != null}">
-  <ul class="text-danger"th:errorclass="errorInput">
-    <li th:each="err : ${errorList}" th:text="${err}"></li>
-  </ul>
-</div>-->

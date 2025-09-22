@@ -39,9 +39,3 @@ function setTargetIndex(index) {
 	document.bulkRegistForm.appendChild(element);
 	return true;
 }
-
-/**
- * Task.27
- * エラーメッセージ表示する
- * 
- *  */ 

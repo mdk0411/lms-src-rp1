@@ -51,17 +51,6 @@ public class StudentAttendanceService {
 	 * @param lmsUserId
 	 * @return 勤怠管理画面用DTOリスト
 	 */
-//Task.25
-	// 未入力件数カウント
-	public int countPast(Integer lmsUserId, Date today) {
-	    return tStudentAttendanceMapper.countPast(
-	        lmsUserId, Constants.DB_FLG_FALSE, today);
-	}
-
-	// 「過去日の～」メッセージ取得
-	public String getPastUnfilledMessage() {
-	    return messageUtil.getMessage("attendance.pastUnfilled.notice");
-	}
 	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId,
 			Integer lmsUserId) {
 
@@ -129,12 +118,6 @@ public class StudentAttendanceService {
 				// 退勤時刻は出勤時刻より後でなければいけません。
 				return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE);
 			}
-			int count = countPast(loginUserDto.getLmsUserId(),
-                    attendanceUtil.getTrainingDate());
-			if (count > 0) {
-				return messageUtil.getMessage(Constants.VALID_KEY_REQUIREDTRAININGTIMEBULK);
-}
-
 			break;
 		}
 		
@@ -350,76 +333,5 @@ public class StudentAttendanceService {
 		}
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
-	}
-	
-// Task.27 入力チェック
-	public List<String> validateAttendanceForm(AttendanceForm attendanceForm) {
-	    List<String> errors = new ArrayList<>();
-
-	    int index = 0;
-	    for (DailyAttendanceForm daily : attendanceForm.getAttendanceList()) {
-	        index++;
-
-	        // a. 備考の文字数チェック
-	        if (daily.getNote() != null && daily.getNote().length() > 100) {
-	            errors.add(messageUtil.getMessage(
-	                Constants.VALID_KEY_MAXLENGTH,
-	                new String[]{"備考", "100"}));
-	        }
-
-	        // b. 出勤時分の片方だけ入力
-	        if ((isNotEmpty(daily.getTrainingStartHour()) && isEmpty(daily.getTrainingStartMinute())) ||
-	            (isEmpty(daily.getTrainingStartHour()) && isNotEmpty(daily.getTrainingStartMinute()))) {
-	            errors.add(messageUtil.getMessage(
-	                Constants.INPUT_INVALID,
-	                new String[]{"出勤時間"}));
-	        }
-
-	        // c. 退勤時分の片方だけ入力
-	        if ((isNotEmpty(daily.getTrainingEndHour()) && isEmpty(daily.getTrainingEndMinute())) ||
-	            (isEmpty(daily.getTrainingEndHour()) && isNotEmpty(daily.getTrainingEndMinute()))) {
-	            errors.add(messageUtil.getMessage(
-	                Constants.INPUT_INVALID,
-	                new String[]{"退勤時間"}));
-	        }
-
-	        // d. 出勤なし && 退勤あり
-	        if (isEmpty(daily.getTrainingStartTime()) && isNotEmpty(daily.getTrainingEndTime())) {
-	            errors.add(messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY));
-	        }
-
-	        // e. 出勤 > 退勤
-	        if (isNotEmpty(daily.getTrainingStartTime()) && isNotEmpty(daily.getTrainingEndTime())) {
-	            TrainingTime start = new TrainingTime(daily.getTrainingStartTime());
-	            TrainingTime end = new TrainingTime(daily.getTrainingEndTime());
-	            if (start.compareTo(end) > 0) {
-	                errors.add(messageUtil.getMessage(
-	                    Constants.VALID_KEY_ATTENDANCE_TRAININGTIMERANGE,
-	                    new String[]{String.valueOf(index)}));
-	            }
-	        }
-
-	        // f. 中抜け時間 > 勤務時間
-	        if (daily.getBlankTime() != null &&
-	        	    isNotEmpty(daily.getTrainingStartTime()) &&
-	        	    isNotEmpty(daily.getTrainingEndTime())) {
-	        	    TrainingTime start = new TrainingTime(daily.getTrainingStartTime());
-	        	    TrainingTime end = new TrainingTime(daily.getTrainingEndTime());
-	        	    TrainingTime blank = attendanceUtil.calcBlankTime(daily.getBlankTime());
-
-	        	    if (blank.compareTo(end.subtract(start)) > 0) {
-	        	        errors.add(messageUtil.getMessage(
-	        	            Constants.VALID_KEY_ATTENDANCE_BLANKTIMEERROR));
-	            }
-	        }
-	    }
-	    return errors;
-	}
-	// ヘルパー
-	private boolean isEmpty(String val) {
-	    return val == null || val.isEmpty();
-	}
-	private boolean isNotEmpty(String val) {
-	    return !isEmpty(val);
 	}
 }

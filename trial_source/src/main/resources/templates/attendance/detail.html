@@ -55,8 +55,8 @@
 						<th class="w200">備考</th>
 					</tr>
 				</thead>
-				
-<!-- 河島麻登花 - Task.29 --><!-- 一覧をスクロール表示できるように加筆 -->
+
+				<!-- 河島麻登花 - Task.29 --><!-- 一覧をスクロール表示できるように加筆 -->
 				<tbody class="db h360" style="overflow-y: scroll;">
 					<th:block th:each="attendanceManagementDto : ${attendanceManagementDtoList}" th:object="${attendanceManagementDto}">
 						<tr>
@@ -88,14 +88,10 @@
 			return hours + ':' + minutes;
 		}
 	</script>
-	<script th:inline="javascript">
-        /*<![CDATA[*/
-        let message = /*[[${message}]]*/ '';
-        if (message) {
-            alert(message);
-        }
-        /*]]>*/
-    </script>
-
+<!-- 河島麻登花- Task.25 -->
+<script type="text/javascript" th:inline="javascript">
+    var message = /*[[${message}]]*/ '';
+        alert(message);
+</script>
 </body>
 </html>

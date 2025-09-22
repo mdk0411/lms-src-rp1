@@ -1,6 +1,7 @@
 package jp.co.sss.lms.controller;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
+import jp.co.sss.lms.mapper.TStudentAttendanceMapper;
 import jp.co.sss.lms.service.StudentAttendanceService;
 import jp.co.sss.lms.util.AttendanceUtil;
 import jp.co.sss.lms.util.Constants;
+import jp.co.sss.lms.util.MessageUtil;
 
 /**
  * 勤怠管理コントローラ
@@ -31,10 +34,15 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
-//Task.26
+// 河島麻登花 - Task.25 追加分
+	@Autowired
+	private MessageUtil messageUtil;
+	@Autowired
+	private TStudentAttendanceMapper tStudentAttendanceMapper; 
+// 河島麻登花 - Task.26 追加分
 	@Autowired
 	private AttendanceUtil attendanceUtil;
-
+	
 	/**
 	 * 勤怠管理画面 初期表示
 	 * 
@@ -46,24 +54,29 @@ public class AttendanceController {
 	 */
 	@RequestMapping(path = "/detail", method = RequestMethod.GET)
 	public String index(Model model) {
-
 		// 勤怠一覧の取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
-// Task.25: 過去日未入力チェック
-		 Date today = new Date();
-		    int count = studentAttendanceService.countPast(loginUserDto.getLmsUserId(), today);
-
-		    if (count > 0) {
-		        model.addAttribute("message",
-		            studentAttendanceService.getPastUnfilledMessage());
-		    }
-
-		    return "attendance/detail";
-		}		    
-
+		/**
+		 * 過去日が未入力の場合の表示
+		 * 
+		 * @author 河島麻登花 – Task.25
+		 * @param model
+		 * @return 勤怠管理画面
+		 */
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		Date today = attendanceUtil.getTrainingDate();
+		
+		int count = tStudentAttendanceMapper.countPastDays(loginUserDto.getLmsUserId(),Constants.DB_FLG_FALSE, today);
+		
+			if (count > 0) {
+				model.addAttribute("message", messageUtil.getMessage("attendance.pastUnfilled.notice"));
+		}
+		return "attendance/detail";
+		}
+	
 	/**
 	 * 勤怠管理画面 『出勤』ボタン押下
 	 * 
@@ -130,12 +143,17 @@ public class AttendanceController {
 		AttendanceForm attendanceForm = studentAttendanceService
 				.setAttendanceForm(attendanceManagementDtoList);
 		
-//Task.26
+		/**
+		 * 勤怠管理画面（直接変更画面）の初期表示
+		 * 
+		 * @author 河島麻登花 - Task.26
+		 * @param model
+		 * @return 勤怠情報直接変更画面
+		 */
 		attendanceForm.setHourList(attendanceUtil.buildHourList());
 		attendanceForm.setMinuteList(attendanceUtil.buildMinuteList(1));
-
 		model.addAttribute("attendanceForm", attendanceForm);
-
+		
 		return "attendance/update";
 	}
 
@@ -151,14 +169,6 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
-//  Task.27 入力チェックを呼び出す
-	    List<String> errors = studentAttendanceService.validateAttendanceForm(attendanceForm);
-	    if (!errors.isEmpty()) {
-	        model.addAttribute("errorList", errors);
-	        model.addAttribute("attendanceForm", attendanceForm);  // 入力値を保持して戻す
-	        return "attendance/update"; // エラーがあれば編集画面に戻る
-	    }
-
 		// 更新
 		String message = studentAttendanceService.update(attendanceForm);
 		model.addAttribute("message", message);

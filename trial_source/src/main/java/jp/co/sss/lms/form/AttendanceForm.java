@@ -29,13 +29,17 @@ public class AttendanceForm {
 	private String dispLeaveDate;
 	/** 中抜け時間(プルダウン) */
 	private LinkedHashMap<Integer, String> blankTimes;
-	/** 日次の勤怠フォームリスト */
-	private List<DailyAttendanceForm> attendanceList;
-
-/* Task.26 */
+	/**
+	 * (時)と(分)のプルダウン
+	 * 
+	 * @author 河島麻登花 - Task.26
+	 */
 	/** 出勤・退勤（時のプルダウン） */
 	private LinkedHashMap<String, String> hourList;
 	/** 出勤・退勤（分のプルダウン） */
 	private LinkedHashMap<String, String> minuteList;
-
+	
+	/** 日次の勤怠フォームリスト */
+	private List<DailyAttendanceForm> attendanceList;
 }
+

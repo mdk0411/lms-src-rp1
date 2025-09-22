@@ -101,8 +101,13 @@ public class AttendanceUtil {
 		}
 		return trainingDate;
 	}
-// Task.26
-				//時リスト
+	
+				/**
+				 * 時間リスト（00〜23）を生成する
+				 *
+				 * @author 河島麻登花 - Task.26
+				 * @return 時間のプルダウンリスト（キー・値ともに "00"〜"23"）
+				 */
 				public LinkedHashMap<String, String> buildHourList() {
 				    LinkedHashMap<String, String> map = new LinkedHashMap<>();
 				    for (int h = 0; h < 24; h++) {
@@ -111,7 +116,13 @@ public class AttendanceUtil {
 				    }
 				    return map;
 				}
-				// 分リスト 00〜59
+				/**
+				 * 分リスト（00〜59）を生成する
+				 *
+				 * @author 河島麻登花 - Task.26
+				 * @param step 分の間隔（例: 1なら1分刻み、5なら5分刻み）
+				 * @return 分のプルダウンリスト（キー・値ともに "00"〜"59"）
+				 */
 				public LinkedHashMap<String, String> buildMinuteList(int step) {
 				    LinkedHashMap<String, String> map = new LinkedHashMap<>();
 				    for (int m = 0; m < 60; m += step) {
