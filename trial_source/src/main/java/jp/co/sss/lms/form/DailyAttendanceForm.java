@@ -1,5 +1,6 @@
 package jp.co.sss.lms.form;
 
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
@@ -17,24 +18,28 @@ public class DailyAttendanceForm {
 	/** 日付 */
 	private String trainingDate;
 	
-	/** 出勤時間 */
+	/** 出勤時間（hh:mm 形式で保持） */
 	private String trainingStartTime;
 	/**
 	 * 出勤時間(時)と(分)
 	 * 
 	 * @author 河島麻登花 - Task.26
 	 */
+	 /** 出勤時間（時） */
 		private String trainingStartTimeHour;
+	/** 出勤時間（分） */
 		private String trainingStartTimeMinute;
 	
-	/** 退勤時間 */
+	/** 退勤時間（hh:mm 形式で保持） */
 	private String trainingEndTime;
 	/**
 	 * 退勤時間(時)と(分)
 	 * 
 	 * @author 河島麻登花 - Task.26
 	 */
+		/** 退勤時間（時） */
 		private String trainingEndTimeHour;
+		 /** 退勤時間（分） */
 		private String trainingEndTimeMinute;
 
 	/** 中抜け時間 */
@@ -64,25 +69,23 @@ public class DailyAttendanceForm {
 	/** インデックス */
 	private String index;
 
-/*Task27追加分
-	public String getTrainingStartHour() {
-	    return startHour;
-	}
+// Task27
+	/** 出勤時間（時） */
+    private String startHour;
 
-	public String getTrainingStartMinute() {
-	    return startMinute;
-	}
+    /** 出勤時間（分） */
+    private String startMinute;
 
-	public String getTrainingEndHour() {
-	    return endHour;
-	}
+    /** 退勤時間（時） */
+    private String endHour;
 
-	public String getTrainingEndMinute() {
-	    return endMinute;
-	}
-	public String getBlankTime() {
-		return null;
-	}*/
+    /** 退勤時間（分） */
+    private String endMinute;
 
+    /** 中抜け時間（分換算で格納する想定） */
+    private Integer breakMinutes;
 
+    /** 備考 */
+    @Size(max = 100, message = "{maxlength}")
+    private String remark;
 }

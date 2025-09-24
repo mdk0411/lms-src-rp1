@@ -1,25 +1,23 @@
 package jp.co.sss.lms.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
-import jp.co.sss.lms.mapper.TStudentAttendanceMapper;
 import jp.co.sss.lms.service.StudentAttendanceService;
 import jp.co.sss.lms.util.AttendanceUtil;
 import jp.co.sss.lms.util.Constants;
-import jp.co.sss.lms.util.MessageUtil;
 
 /**
  * 勤怠管理コントローラ
@@ -34,15 +32,59 @@ public class AttendanceController {
 	private StudentAttendanceService studentAttendanceService;
 	@Autowired
 	private LoginUserDto loginUserDto;
-// 河島麻登花 - Task.25 追加分
-	@Autowired
-	private MessageUtil messageUtil;
-	@Autowired
-	private TStudentAttendanceMapper tStudentAttendanceMapper; 
 // 河島麻登花 - Task.26 追加分
 	@Autowired
 	private AttendanceUtil attendanceUtil;
-	
+	 /**
+     * 勤怠入力画面（update.html）の表示
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    public String showUpdateForm(Model model) {
+        // 空のフォームを用意
+        AttendanceForm form = new AttendanceForm();
+
+        // プルダウン用のデータをセット
+        form.setBlankTimes(attendanceUtil.setBlankTime());   // 中抜け時間
+        form.setHourMap(attendanceUtil.getHourMap());        // 時（00〜23）
+        form.setMinuteMap(attendanceUtil.getMinuteMap(1));   // 分（1分刻み）
+
+        // 画面に渡す
+        model.addAttribute("attendanceForm", form);
+
+        // templates/attendance/update.html を表示
+        return "attendance/update";
+    }
+
+    /**
+     * 勤怠データの更新処理
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String updateAttendance(
+            @ModelAttribute("attendanceForm") @Validated AttendanceForm form,
+            BindingResult result,
+            Model model) {
+
+        // サービスで入力チェック
+        studentAttendanceService.validateAttendance(form, result);
+
+        // エラーがある場合
+        if (result.hasErrors()) {
+            // もう一度プルダウンをセットし直す（エラー画面でも表示するため）
+            form.setBlankTimes(attendanceUtil.setBlankTime());
+            form.setHourMap(attendanceUtil.getHourMap());
+            form.setMinuteMap(attendanceUtil.getMinuteMap(1));
+
+            // 入力画面に戻す
+            model.addAttribute("attendanceForm", form);
+            return "attendance/update";
+        }
+
+        // エラーがなければ保存処理(?)
+        //studentAttendanceService.save(form);
+
+        // 保存後は一覧画面へリダイレクト
+        return "redirect:/attendance/list";
+    }
 	/**
 	 * 勤怠管理画面 初期表示
 	 * 
@@ -59,24 +101,22 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
-		/**
-		 * 過去日が未入力の場合の表示
-		 * 
-		 * @author 河島麻登花 – Task.25
-		 * @param model
-		 * @return 勤怠管理画面
-		 */
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		Date today = attendanceUtil.getTrainingDate();
-		
-		int count = tStudentAttendanceMapper.countPastDays(loginUserDto.getLmsUserId(),Constants.DB_FLG_FALSE, today);
-		
-			if (count > 0) {
-				model.addAttribute("message", messageUtil.getMessage("attendance.pastUnfilled.notice"));
-		}
-		return "attendance/detail";
-		}
-	
+	/**
+     * 勤怠管理画面（detail）の表示
+     * 
+     * 過去日の勤怠に未入力がある場合はメッセージを画面に表示する
+     *
+	 * @author 河島麻登花 – Task.25
+	 * @param model
+	 * @return 勤怠管理画面
+	 */
+        // 過去日未入力の有無をチェック
+        boolean notEnterFlg = studentAttendanceService.checkNotEnterCount();
+            model.addAttribute("notEnterFlg", notEnterFlg);
+
+        return "attendance/detail";
+}
+
 	/**
 	 * 勤怠管理画面 『出勤』ボタン押下
 	 * 
@@ -150,8 +190,9 @@ public class AttendanceController {
 		 * @param model
 		 * @return 勤怠情報直接変更画面
 		 */
-		attendanceForm.setHourList(attendanceUtil.buildHourList());
-		attendanceForm.setMinuteList(attendanceUtil.buildMinuteList(1));
+		attendanceForm.setHourMap(attendanceUtil.getHourMap());
+		attendanceForm.setMinuteMap(attendanceUtil.getMinuteMap(1));
+		
 		model.addAttribute("attendanceForm", attendanceForm);
 		
 		return "attendance/update";
@@ -180,4 +221,5 @@ public class AttendanceController {
 
 		return "attendance/detail";
 }
-}
+	
+	}

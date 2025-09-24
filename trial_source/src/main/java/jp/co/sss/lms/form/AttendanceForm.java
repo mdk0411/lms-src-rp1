@@ -35,9 +35,9 @@ public class AttendanceForm {
 	 * @author 河島麻登花 - Task.26
 	 */
 	/** 出勤・退勤（時のプルダウン） */
-	private LinkedHashMap<String, String> hourList;
+	private LinkedHashMap<Integer, String> hourMap;
 	/** 出勤・退勤（分のプルダウン） */
-	private LinkedHashMap<String, String> minuteList;
+	private LinkedHashMap<Integer, String> minuteMap;
 	
 	/** 日次の勤怠フォームリスト */
 	private List<DailyAttendanceForm> attendanceList;

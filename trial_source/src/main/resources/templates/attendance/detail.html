@@ -88,10 +88,12 @@
 			return hours + ':' + minutes;
 		}
 	</script>
-<!-- 河島麻登花- Task.25 -->
-<script type="text/javascript" th:inline="javascript">
-    var message = /*[[${message}]]*/ '';
-        alert(message);
+<!-- 河島麻登花 Task.25 過去日未入力メッセージ -->
+<script th:inline="javascript">
+    let notEnterFlg = /*[[${notEnterFlg}]]*/ false;
+    if (notEnterFlg) {
+        alert("過去日の勤怠に未入力があります。");
+    }
 </script>
 </body>
 </html>

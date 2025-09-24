@@ -18,24 +18,6 @@ import jp.co.sss.lms.entity.TStudentAttendance;
  */
 @Mapper
 public interface TStudentAttendanceMapper {
-
-	/**
-	 * 勤怠情報（過去日未入力件数）の取得
-	 * 
-	 * @author 河島麻登花 - Task.25
-	 * @param lmsUserId
-	 * @param deleteFlg
-	 * @param today
-	 * @return 未入力件数
-	 */
-	int countPastDays(
-	    @Param("lmsUserId") Integer lmsUserId,
-	    @Param("deleteFlg") Short deleteFlg,
-	    @Param("today") Date today
-	);
-	
-
-
 	/**
 	 * 勤怠情報（受講生入力）取得（LMSユーザーID）
 	 * 
@@ -83,4 +65,20 @@ public interface TStudentAttendanceMapper {
 	 * @return 更新結果
 	 */
 	Boolean update(TStudentAttendance tStudentAttendance);
+	
+
+	/**
+	 * 勤怠情報（過去日未入力件数）の取得
+	 * 
+	 * @author 河島麻登花 - Task.25
+	 * @param lmsUserId
+	 * @param deleteFlg
+	 * @param trainingDate
+	 * @return 未入力件数
+	 */
+	Integer notEnterCount(
+	    @Param("lmsUserId") Integer lmsUserId,
+	    @Param("deleteFlg") Short deleteFlg,
+	    @Param("trainingDate") Date trainingDate
+	);
 }

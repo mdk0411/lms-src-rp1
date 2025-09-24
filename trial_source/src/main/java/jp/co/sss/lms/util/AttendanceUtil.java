@@ -103,31 +103,29 @@ public class AttendanceUtil {
 	}
 	
 				/**
-				 * 時間リスト（00〜23）を生成する
+				 * Task.26 時間リスト（00〜23）を生成する
 				 *
 				 * @author 河島麻登花 - Task.26
 				 * @return 時間のプルダウンリスト（キー・値ともに "00"〜"23"）
 				 */
-				public LinkedHashMap<String, String> buildHourList() {
-				    LinkedHashMap<String, String> map = new LinkedHashMap<>();
-				    for (int h = 0; h < 24; h++) {
-				        String t = String.format("%02d", h);
-				        map.put(t, t);
-				    }
-				    return map;
+				public LinkedHashMap<Integer, String> getHourMap() {
+					LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+					for (int h = 0; h < 24; h++) {
+						map.put(h, String.format("%02d", h));
+					}
+					return map;
 				}
 				/**
-				 * 分リスト（00〜59）を生成する
+				 * Task.26 分リスト（00〜59）を生成する
 				 *
 				 * @author 河島麻登花 - Task.26
-				 * @param step 分の間隔（例: 1なら1分刻み、5なら5分刻み）
+				 * @param step 分の間隔（1なら1分刻み、5なら5分刻み）
 				 * @return 分のプルダウンリスト（キー・値ともに "00"〜"59"）
 				 */
-				public LinkedHashMap<String, String> buildMinuteList(int step) {
-				    LinkedHashMap<String, String> map = new LinkedHashMap<>();
+				public LinkedHashMap<Integer, String> getMinuteMap(int step) {
+				    LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 				    for (int m = 0; m < 60; m += step) {
-				        String t = String.format("%02d", m);
-				        map.put(t, t);
+				        map.put(m, String.format("%02d", m));
 				    }
 				    return map;
 				}

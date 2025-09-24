@@ -30,9 +30,9 @@
 							<th class="w140">コース内容</th>
 						<!-- 河島麻登花 - Task.28定時ボタン -->
 							<th class="w60"></th>
-						<!-- 河島麻登花 - Task.29 --><!-- 画面mockから値を参照、修正 -->
+						<!-- 河島麻登花 - Task.29 -->
       						<th class="w180" colspan="3">出勤</th>
-      					<!-- 河島麻登花 - Task.29 --><!-- 画面mockから値を参照、修正 -->
+      					<!-- 河島麻登花 - Task.29 -->
       						<th class="w180" colspan="3">退勤</th>
 							<th class="w80">中抜け時間</th>
 							<th class="w70">ステータス</th>
@@ -57,54 +57,65 @@
 
 <!-- 河島麻登花 - Task.28 「定時ボタン」の設置 -->
 <td class="w60">
-        <input type="button" value="定時" class="btn btn-success default-button" />
+        <input type="button" value="定時" class="btn btn-success default-button"
+          onclick="setDefaultTime(this)" />
 </td>
 
 
 <!-- 河島麻登花 - Task.26 出勤(時:分) -->
 <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].startHour|"
-           class="form-control w70">
-            <option value=""></option>
-            <option th:each="h : ${attendanceForm.hourList}"
-                    th:value="${h.key}"
+ 		<select th:name="|attendanceList[${stat.index}].trainingStartTimeHour|"
+			class="form-control w70">
+ 			<option value=""></option>
+			<option th:each="h : ${attendanceForm.hourMap}"
+                    th:value="${h.value}"
                     th:text="${h.value}"
-                    th:selected="${h.key == dailyAttendanceForm.startHour}"></option>
+                    th:selected="${h.value == dailyAttendanceForm.trainingStartTimeHour}"></option>
           </select>
+		<!-- Task.27 出勤時間エラー表示 -->
+  		<div th:errors="*{attendanceList[${stat.index}].trainingStartTimeHour}" class="text-danger"></div>
         </td>
         <td>:</td>
 <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].startMinute|"
+          <select th:name="|attendanceList[${stat.index}].trainingStartTimeMinute|"
           class="form-control w70">
             <option value=""></option>
-            <option th:each="m : ${attendanceForm.minuteList}"
-                    th:value="${m.key}"
+            <option th:each="m : ${attendanceForm.minuteMap}"
+                    th:value="${m.value}"
                     th:text="${m.value}"
-                    th:selected="${m.key == dailyAttendanceForm.startMinute}"></option>
+                    th:selected="${m.value == dailyAttendanceForm.trainingStartTimeMinute}"></option>
           </select>
+          <!-- 出勤時間（分）のエラー表示 -->
+  <div th:errors="*{attendanceList[${stat.index}].trainingStartTimeMinute}" class="text-danger"></div>
         </td>
 
  <!-- 河島麻登花 - Task.26 退勤(時:分) -->
  <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].endHour|"
+          <select th:name="|attendanceList[${stat.index}].trainingEndTimeHour|"
           class="form-control w70">
             <option value=""></option>
-            <option th:each="h : ${attendanceForm.hourList}"
-                    th:value="${h.key}"
+            <option th:each="h : ${attendanceForm.hourMap}"
+                    th:value="${h.value}"
                     th:text="${h.value}"
-                    th:selected="${h.key == dailyAttendanceForm.endHour}"></option>
+                    th:selected="${h.value == dailyAttendanceForm.trainingEndTimeHour}"></option>
           </select>
+          <!-- 退勤時間エラー表示 -->
+  <div th:errors="*{attendanceList[${stat.index}].trainingEndTimeHour}" class="text-danger"></div>
+
         </td>
         <td>:</td>
 <td class="w70">
-          <select th:name="|attendanceList[${stat.index}].endMinute|"
+          <select th:name="|attendanceList[${stat.index}].trainingEndTimeMinute|"
           class="form-control w70">
             <option value=""></option>
-            <option th:each="m : ${attendanceForm.minuteList}"
-                    th:value="${m.key}"
+            <option th:each="m : ${attendanceForm.minuteMap}"
+                    th:value="${m.value}"
                     th:text="${m.value}"
-                    th:selected="${m.key == dailyAttendanceForm.endMinute}"></option>
+                    th:selected="${m.value == dailyAttendanceForm.trainingEndTimeMinute}"></option>
           </select>
+            <!-- 退勤時間（分）のエラー表示 -->
+  <div th:errors="*{attendanceList[${stat.index}].trainingEndTimeMinute}" class="text-danger"></div>
+
         </td>
 
 									<td class="w80">
@@ -113,39 +124,60 @@
 										<option th:each="blankTime : ${attendanceForm.blankTimes}" th:value="${blankTime.key}" th:inline="text" class="form-control" 
 											th:selected="${blankTime.key == dailyAttendanceForm.blankTime}">[[${blankTime.value}]]</option>
 									</select>
+									<!-- 中抜け時間エラー表示 -->
+  <div th:errors="*{attendanceList[${stat.index}].blankTime}" class="text-danger"></div>
+
 								</td>
 								<!-- ステータスと備考 -->
 								<td class="w70">[[${dailyAttendanceForm.statusDispName}]]</td>
 								<td class="w240">
 									<input type="text" th:name="|attendanceList[${stat.index}].note|" th:value="${dailyAttendanceForm.note}" class="form-control"></input>
-								</td>
-							</tr>
-						</th:block>
-					</tbody>
-				</table>
-</table>
-</div>
+						<!-- 備考エラー表示 -->
+  <div th:errors="*{attendanceList[${stat.index}].note}" class="text-danger"></div>
 
-				<div class="form-group">
+						</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+		<div class="form-group">
 					<th:block th:if="${session.loginUserDto.role == '0001'}">
 						<a th:href="@{/attendance/detail}" class="btn btn-default">戻る</a>
 					</th:block>
+					
 					<th:block th:if="${session.loginUserDto.role != '0001'}">
 						<input type="submit" value="戻る" name="indexCompany" class="btn btn-default" />
 					</th:block>
-<!-- Task.27 JSで「更新確認ダイアログ」-->
+					
 					<input type="submit" value="更新" name="complete" class="btn btn-info"
-					 		onclick="return confirmUpdate()"/>
+					 		onclick="return registCheck()"/>
+					 </div>
+				</form>
+			</div>	 
+		</div>
+					 <!-- Task.27 JSで「更新確認ダイアログ」-->
 					 <script>
-						 function confirmUpdate() {
+						 function registCheck() {
 							 return confirm("更新します。よろしいですか？");
 							 }
 					</script>
-				</div>
+<!-- Task.28 定時ボタン-->
+<script>
+function setDefaultTime(button) {
+    // 押されたボタンと同じ行を取得
+    var row = button.closest("tr");
 
-			</form>
-		</div>
-	</div>
+    // 出勤時刻 (09:00)
+    var startHour = row.querySelector("select[name$='.trainingStartTimeHour']");
+    var startMinute = row.querySelector("select[name$='.trainingStartTimeMinute']");
+    if (startHour) startHour.value = "09";
+    if (startMinute) startMinute.value = "00";
 
-</body>
+    // 退勤時刻 (18:00)
+    var endHour = row.querySelector("select[name$='.trainingEndTimeHour']");
+    var endMinute = row.querySelector("select[name$='.trainingEndTimeMinute']");
+    if (endHour) endHour.value = "18";
+    if (endMinute) endMinute.value = "00";
+}
+</script></body>
 </html>
