@@ -18,6 +18,7 @@ public class DailyAttendanceForm {
 	/** 日付 */
 	private String trainingDate;
 	
+	
 	/** 出勤時間（hh:mm 形式で保持） */
 	private String trainingStartTime;
 	/**
@@ -25,7 +26,7 @@ public class DailyAttendanceForm {
 	 * 
 	 * @author 河島麻登花 - Task.26
 	 */
-	 /** 出勤時間（時） */
+	/** 出勤時間（時） */
 		private String trainingStartTimeHour;
 	/** 出勤時間（分） */
 		private String trainingStartTimeMinute;
@@ -37,9 +38,9 @@ public class DailyAttendanceForm {
 	 * 
 	 * @author 河島麻登花 - Task.26
 	 */
-		/** 退勤時間（時） */
+	/** 退勤時間（時） */
 		private String trainingEndTimeHour;
-		 /** 退勤時間（分） */
+	/** 退勤時間（分） */
 		private String trainingEndTimeMinute;
 
 	/** 中抜け時間 */
@@ -48,8 +49,18 @@ public class DailyAttendanceForm {
 	private String blankTimeValue;
 	/** ステータス */
 	private String status;
+
+	/**
+	 * 備考に@Sizeを付与したる
+	 * 
+	 * @author 河島麻登花 - Task.26
+	 */
 	/** 備考 */
+	@Size(max = 100, message = "{maxlength}")
 	private String note;
+
+	
+	
 	/** セクション名 */
 	private String sectionName;
 	/** 当日フラグ */
@@ -68,24 +79,4 @@ public class DailyAttendanceForm {
 	private String courseName;
 	/** インデックス */
 	private String index;
-
-// Task27
-	/** 出勤時間（時） */
-    private String startHour;
-
-    /** 出勤時間（分） */
-    private String startMinute;
-
-    /** 退勤時間（時） */
-    private String endHour;
-
-    /** 退勤時間（分） */
-    private String endMinute;
-
-    /** 中抜け時間（分換算で格納する想定） */
-    private Integer breakMinutes;
-
-    /** 備考 */
-    @Size(max = 100, message = "{maxlength}")
-    private String remark;
 }

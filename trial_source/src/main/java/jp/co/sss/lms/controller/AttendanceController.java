@@ -1,6 +1,7 @@
 package jp.co.sss.lms.controller;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import jakarta.validation.Valid;
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
 import jp.co.sss.lms.form.AttendanceForm;
@@ -40,16 +42,27 @@ public class AttendanceController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String showUpdateForm(Model model) {
-        // 空のフォームを用意
-        AttendanceForm form = new AttendanceForm();
+    	// 勤怠管理リストの取得
+        List<AttendanceManagementDto> attendanceManagementDtoList =
+            studentAttendanceService.getAttendanceManagement(
+                loginUserDto.getCourseId(),
+                loginUserDto.getLmsUserId()
+            );
+        
+     // 勤怠フォームの生成（ここで attendanceList に詰める）
+        AttendanceForm attendanceForm =
+            studentAttendanceService.setAttendanceForm(attendanceManagementDtoList);
+
 
         // プルダウン用のデータをセット
-        form.setBlankTimes(attendanceUtil.setBlankTime());   // 中抜け時間
-        form.setHourMap(attendanceUtil.getHourMap());        // 時（00〜23）
-        form.setMinuteMap(attendanceUtil.getMinuteMap(1));   // 分（1分刻み）
+     // プルダウン用のデータをセット
+        attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+        attendanceForm.setHourMap(attendanceUtil.getHourMap());
+        attendanceForm.setMinuteMap(attendanceUtil.getMinuteMap(1));
+
 
         // 画面に渡す
-        model.addAttribute("attendanceForm", form);
+        model.addAttribute("attendanceForm", attendanceForm);
 
         // templates/attendance/update.html を表示
         return "attendance/update";
@@ -62,7 +75,7 @@ public class AttendanceController {
     public String updateAttendance(
             @ModelAttribute("attendanceForm") @Validated AttendanceForm form,
             BindingResult result,
-            Model model) {
+            Model model)throws ParseException { 
 
         // サービスで入力チェック
         studentAttendanceService.validateAttendance(form, result);
@@ -74,16 +87,14 @@ public class AttendanceController {
             form.setHourMap(attendanceUtil.getHourMap());
             form.setMinuteMap(attendanceUtil.getMinuteMap(1));
 
-            // 入力画面に戻す
+
             model.addAttribute("attendanceForm", form);
             return "attendance/update";
         }
-
-        // エラーがなければ保存処理(?)
-        //studentAttendanceService.save(form);
-
-        // 保存後は一覧画面へリダイレクト
-        return "redirect:/attendance/list";
+        // 入力を保存してから遷移
+        studentAttendanceService.update(form);
+        
+        return "redirect:/attendance/detail";
     }
 	/**
 	 * 勤怠管理画面 初期表示
@@ -97,8 +108,10 @@ public class AttendanceController {
 	@RequestMapping(path = "/detail", method = RequestMethod.GET)
 	public String index(Model model) {
 		// 勤怠一覧の取得
-		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
-				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
+		List<AttendanceManagementDto> attendanceManagementDtoList = 
+				studentAttendanceService.getAttendanceManagement(
+						loginUserDto.getCourseId(), 
+						loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
 	/**
@@ -110,10 +123,23 @@ public class AttendanceController {
 	 * @param model
 	 * @return 勤怠管理画面
 	 */
-        // 過去日未入力の有無をチェック
-        boolean notEnterFlg = studentAttendanceService.checkNotEnterCount();
-            model.addAttribute("notEnterFlg", notEnterFlg);
-
+		// 今日（00:00:00）の Date を Util から取得してる
+		Date today = attendanceUtil.getTrainingDate();
+		
+		boolean notEnterFlg = false;
+	    for (AttendanceManagementDto dto : attendanceManagementDtoList) {
+	        // “過去日”か？
+	        if (dto.getTrainingDate() != null && dto.getTrainingDate().before(today)) {
+	            // 出勤 or 退勤のどちらかが空なら未入力扱い
+	            boolean startEmpty = (dto.getTrainingStartTime() == null || dto.getTrainingStartTime().isEmpty());
+	            boolean endEmpty   = (dto.getTrainingEndTime()   == null || dto.getTrainingEndTime().isEmpty());
+	            if (startEmpty || endEmpty) {
+	                notEnterFlg = true;
+	                break;  //1県見つけた時点で処理を抜ける
+	            }
+	        }
+	    }
+	    model.addAttribute("notEnterFlg", notEnterFlg);
         return "attendance/detail";
 }
 
@@ -208,8 +234,20 @@ public class AttendanceController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
-	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
+	// 河島麻登花 - Task.27(@Validを付けました)
+	public String complete(@Valid AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
+		
+		 // 河島麻登花 - Task.27 入力チェッックを呼び出す
+	    studentAttendanceService.validateAttendance(attendanceForm, result);
+
+	    // 河島麻登花 - Task.27 エラーがある場合は「update.html」に戻す
+	    if (result.hasErrors()) {
+	        model.addAttribute("attendanceForm", attendanceForm);
+	        return "attendance/update";
+	    }
+
+	    // 河島麻登花 - Task.27 エラーがなければ更新処理
 		// 更新
 		String message = studentAttendanceService.update(attendanceForm);
 		model.addAttribute("message", message);

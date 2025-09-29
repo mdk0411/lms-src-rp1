@@ -56,7 +56,7 @@
 					</tr>
 				</thead>
 
-				<!-- 河島麻登花 - Task.29 --><!-- 一覧をスクロール表示できるように加筆 -->
+				<!-- 河島麻登花 - Task.29 --><!-- 一覧をスクロール表示できるように加筆-->
 				<tbody class="db h360" style="overflow-y: scroll;">
 					<th:block th:each="attendanceManagementDto : ${attendanceManagementDtoList}" th:object="${attendanceManagementDto}">
 						<tr>
@@ -66,7 +66,9 @@
 							<td class="w80">[[*{trainingEndTime}]]</td>
 							<td class="w120">[[*{blankTimeValue}]]</td>
 							<td class="w120">[[*{statusDispName}]]</td>
-							<td class="w200">[[*{note}]]</td>
+				<!-- 河島麻登花 - Task.29 --><!-- 備考欄ずれるので折り返せるようにしてる-->
+							<td class="w200" style="overflow-wrap:anywhere; word-break:break-word;">[[*{note}]]</td>
+
 						</tr>
 					</th:block>
 				</tbody>

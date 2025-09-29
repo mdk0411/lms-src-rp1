@@ -3,6 +3,7 @@ package jp.co.sss.lms.form;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import jakarta.validation.Valid;
 import lombok.Data;
 
 /**
@@ -29,17 +30,15 @@ public class AttendanceForm {
 	private String dispLeaveDate;
 	/** 中抜け時間(プルダウン) */
 	private LinkedHashMap<Integer, String> blankTimes;
-	/**
-	 * (時)と(分)のプルダウン
-	 * 
-	 * @author 河島麻登花 - Task.26
-	 */
-	/** 出勤・退勤（時のプルダウン） */
-	private LinkedHashMap<Integer, String> hourMap;
-	/** 出勤・退勤（分のプルダウン） */
-	private LinkedHashMap<Integer, String> minuteMap;
 	
-	/** 日次の勤怠フォームリスト */
-	private List<DailyAttendanceForm> attendanceList;
+	
+	// 河島麻登花 – Task.26
+	// 勤怠入力用プルダウン
+	private LinkedHashMap<Integer, String> hourMap;    // 出勤退勤(時)
+	private LinkedHashMap<Integer, String> minuteMap;  // 出勤退勤(分)
+	
+	// 河島麻登花 – Task.27
+	@Valid
+	private List<DailyAttendanceForm> attendanceList;  // 日次勤怠フォームリスト
 }
 
